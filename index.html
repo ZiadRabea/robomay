@@ -44,14 +44,58 @@
 <!-- Navbar -->
 <header class="bg-white shadow-md fixed top-0 left-0 w-full z-50">
   <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <!-- Logo -->
     <div class="flex items-center gap-2 text-emerald-600 font-extrabold text-xl">
       <img src="imgs/logo.png" class="h-8 w-8">
       Robomay
     </div>
+
+    <!-- Hamburger Menu for Mobile -->
+    <div class="md:hidden cursor-pointer text-3xl" id="mobile-menu-btn">&#9776;</div>
+
+    <!-- Nav Links -->
+    <nav class="hidden md:flex md:items-center md:gap-6 flex-col md:flex-row md:w-auto mt-4 md:mt-0 text-left" id="mobile-menu">
+      <a href="#why" class="hover:text-emerald-600 py-2">About</a>
+      <a href="#models" class="hover:text-emerald-600 py-2">Models</a>
+      <a href="#demo" class="hover:text-emerald-600 py-2">Demo</a>
+      <a href="talk-to-robomay.html" class="hover:text-emerald-600 py-2">Talk to Robomay</a>
+      <a href="team.html" class="hover:text-emerald-600 py-2">Meet The Team</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const mobileBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  mobileBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden'); // تظهر أو تختفي القائمة
+    mobileMenu.classList.toggle('flex');   // تتحول إلى flex عمودي
+    mobileMenu.classList.toggle('absolute');
+    mobileMenu.classList.toggle('top-16'); // أسفل الهيدر
+    mobileMenu.classList.toggle('right-0'); 
+    mobileMenu.classList.toggle('bg-white');
+    mobileMenu.classList.toggle('p-4');
+    mobileMenu.classList.toggle('shadow-lg');
+    mobileMenu.classList.toggle('rounded-lg');
+  });
+</script>
+<!-- CSS بسيط للـ fade animation -->
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease forwards;
+  }
+</style>
     <nav class="hidden md:flex space-x-6 text-gray-700 font-medium">
-      <a href="#why" class="hover:text-emerald-600">About</a>
-      <a href="#models" class="hover:text-emerald-600">Models</a>
-      <a href="#demo" class="hover:text-emerald-600">Demo</a>
+     <a href="#why" class="hover:text-emerald-600">About</a>
+     <a href="#models" class="hover:text-emerald-600">Models</a>
+     <a href="#demo" class="hover:text-emerald-600">Demo</a>
+     <a href="talk-to-robomay.html">Talk to Robomay</a>
+     <a href="team.html">Meat The Team</a>
     </nav>
   </div>
 </header>

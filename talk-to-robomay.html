@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talk to Robomay 🤖</title>
+  <style>
+    body {
+      font-family: "Cairo", sans-serif;
+      background: linear-gradient(135deg, #d8f8b7, #a3f1a7);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #333;
+    }
+
+    .chat-container {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      width: 90%;
+      max-width: 500px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 80vh;
+    }
+
+    .chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.left-side {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.left-side h2 {
+  margin: 0;
+}
+
+    .chat-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-header img {
+      width: 55px;
+      height: 55px;
+    }
+
+    .chat-header h2 {
+      margin: 0;
+    }
+
+    /* ✅ زر العودة */
+    .back-btn {
+      background: linear-gradient(135deg, #8ae48f, #b3f6b2);
+      border: none;
+      color: #333;
+      padding: 8px 15px;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      text-decoration: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .back-btn:hover {
+      background: linear-gradient(135deg, #7be07f, #9ff49d);
+      transform: scale(1.05);
+    }
+
+    .chat-box {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 10px;
+      border-radius: 10px;
+      background-color: #f6fff2;
+    }
+
+    .message {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      max-width: 80%;
+    }
+
+    .user {
+      background: #c1f0b5;
+      align-self: flex-end;
+    }
+
+    .bot {
+      background: #e5fbd1;
+      align-self: flex-start;
+    }
+
+    .chat-input {
+      display: flex;
+      margin-top: 10px;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid #a3f1a7;
+      border-radius: 10px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    button {
+      background: linear-gradient(135deg, #8ae48f, #b3f6b2);
+      border: none;
+      padding: 10px 15px;
+      border-radius: 10px;
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #7be07f, #9ff49d);
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+  <div class="left-side">
+    <img src="imgs/logo.png" alt="Robomay Logo">
+    <h2>Talk to Robomay</h2>
+  </div>
+  <a href="index.html" class="back-btn">🏠 Home Page</a>
+</div>
+
+    <div class="chat-box" id="chatBox">
+      <div class="bot message">Hello, I'm Robomay. How can I help you?</div>
+    </div>
+
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Type your message here...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chatBox");
+    const userInput = document.getElementById("userInput");
+
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      if (!message) return;
+
+      addMessage(message, "user");
+      userInput.value = "";
+
+      addMessage(" Thinking...", "bot");
+
+      try {
+        const response = await getAIResponse(message);
+        const botMessages = document.querySelectorAll(".bot");
+        botMessages[botMessages.length - 1].innerText = response;
+      } catch (err) {
+        console.error(err);
+        const botMessages = document.querySelectorAll(".bot");
+        botMessages[botMessages.length - 1].innerText = "⚠️ Server error. Try again.";
+      }
+    }
+
+    function addMessage(text, sender) {
+      const messageDiv = document.createElement("div");
+      messageDiv.classList.add("message", sender);
+      messageDiv.innerText = text;
+      chatBox.appendChild(messageDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function getAIResponse(userMessage) {
+      const response = await fetch("http://127.0.0.1:8000/api/genai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage }),
+      });
+      const data = await response.json();
+      return data.result || "⚠️ I'm not sure, could you rephrase?";
+    }
+
+    userInput.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
